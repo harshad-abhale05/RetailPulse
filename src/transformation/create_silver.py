@@ -167,7 +167,21 @@ transform(
     ["review_id", "order_id"]
 )
 
-# 6. Products with category translation
+# 6. Category translation
+transform(
+    "category_translation",
+    """
+    CREATE OR REPLACE TABLE silver_table AS
+    SELECT
+        CAST(product_category_name AS VARCHAR) AS product_category_name,
+        CAST(product_category_name_english AS VARCHAR) AS product_category_name_english
+    FROM read_csv_auto(?, header = true)
+    """,
+    "product_category_name_translation.csv",
+    ["product_category_name"]
+)
+
+# 7. Products with category translation
 transform(
     "products",
     """
@@ -194,7 +208,7 @@ transform(
     ["product_id"]
 )
 
-# 7. Sellers
+# 8. Sellers
 transform(
     "sellers",
     """
@@ -208,20 +222,6 @@ transform(
     """,
     "olist_sellers_dataset.csv",
     ["seller_id"]
-)
-
-# 8. Category translation
-transform(
-    "category_translation",
-    """
-    CREATE OR REPLACE TABLE silver_table AS
-    SELECT
-        CAST(product_category_name AS VARCHAR) AS product_category_name,
-        CAST(product_category_name_english AS VARCHAR) AS product_category_name_english
-    FROM read_csv_auto(?, header = true)
-    """,
-    "product_category_name_translation.csv",
-    ["product_category_name"]
 )
 
 # 9. Aggregate geolocation to one row per ZIP prefix
