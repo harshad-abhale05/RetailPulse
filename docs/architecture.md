@@ -1,62 +1,76 @@
-# RetailPulse - Cloud Data Lakehouse Architecture
+# RetailPulse - Cloud-Based E-Commerce Lakehouse
 
 ## 1. Project Objective
 
-Build an end-to-end cloud-based e-commerce data engineering
-pipeline using the Brazilian Olist E-Commerce dataset.
+Build an end-to-end e-commerce data engineering pipeline
+using the Brazilian Olist E-Commerce dataset.
 
-The pipeline will ingest, store, validate, transform and analyze
-e-commerce data.
+The pipeline will ingest, validate, transform and analyze
+real-world e-commerce data.
 
-## 2. Architecture
+## 2. Technology Stack
 
-Olist CSV Dataset
-       |
-       v
-Python Ingestion (GitHub Codespaces)
-       |
-       v
-AWS S3 - Bronze
-       |
-       v
-AWS Glue / PySpark
-       |
-       v
-AWS S3 - Silver
-       |
-       v
-dbt / SQL Transformations
-       |
-       v
-AWS S3 - Gold
-       |
-       v
-AWS Athena
-       |
-       v
-Power BI Dashboard
+| Component | Technology |
+|---|---|
+| Development | GitHub Codespaces |
+| Programming | Python |
+| Data processing | DuckDB |
+| Storage format | Apache Parquet |
+| SQL transformations | dbt Core |
+| Pipeline automation | GitHub Actions |
+| Dashboard | Streamlit Community Cloud |
+| Version control | GitHub |
 
-Apache Airflow will coordinate pipeline execution.
+## 3. Architecture
 
-## 3. Medallion Architecture
+Olist Dataset (Kaggle)
+        |
+        v
+GitHub Codespaces
+        |
+        v
+Python Ingestion
+        |
+        v
+BRONZE - Original CSV Data
+        |
+        v
+DuckDB Processing
+        |
+        v
+SILVER - Cleaned Parquet Data
+        |
+        v
+dbt Core / SQL
+        |
+        v
+GOLD - Analytics Tables
+        |
+        v
+DuckDB Analytics
+        |
+        v
+Streamlit Dashboard
 
-### Bronze Layer
-- Store all nine original CSV datasets.
-- Preserve original source data.
-- Maintain ingestion metadata.
+GitHub Actions will automate pipeline execution.
 
-### Silver Layer
+## 4. Medallion Architecture
+
+### Bronze
+- Preserve all nine original Olist CSV datasets.
+- Maintain source data without modifications.
+- Record ingestion metadata.
+
+### Silver
 - Standardize column names and data types.
 - Handle missing values appropriately.
-- Validate primary and foreign key relationships.
-- Preserve valid records with incomplete information.
+- Validate keys and relationships.
+- Preserve incomplete but valid records.
 - Aggregate geolocation by ZIP prefix.
-- Preserve review composite key (review_id, order_id).
+- Preserve review composite key.
 - Retain untranslated product categories.
 
-### Gold Layer
-
-Planned analytical tables:
+### Gold
 
 Fact tables:
 - fact_order_items
@@ -70,36 +84,40 @@ Dimension tables:
 - dim_sellers
 - dim_date
 
-Payment and order-item facts will remain separate to avoid
-duplicating records during analytical joins.
-
-## 4. Technology Stack
-
-- Python
-- SQL
-- AWS S3
-- AWS Glue
-- PySpark
-- AWS Athena
-- dbt
-- Apache Airflow
-- Power BI
+Payment and order-item facts remain separate to avoid
+inflated results from many-to-many joins.
 
 ## 5. Data Quality Decisions
 
-- Preserve original source CSV files.
-- Do not delete products with missing category translations.
+- Preserve original source data.
+- Do not delete products with missing translations.
 - Preserve incomplete orders.
 - Use LEFT JOIN for optional geographic enrichment.
 - Use (review_id, order_id) as the review composite key.
-- Keep unmatched geolocation coordinates NULL.
+- Keep unmatched geographic coordinates NULL.
 
-## 6. Development Environment
+## 6. Execution and Storage
 
-All development and execution will be performed using
-GitHub Codespaces and cloud services.
+- Development and initial processing: GitHub Codespaces.
+- Analytical storage: Parquet files.
+- Query engine: DuckDB.
+- Source code: GitHub repository.
 
-No local-host deployment is required.
+Large source datasets and generated Parquet files must
+not be committed to GitHub.
 
-AWS resources will only be provisioned after reviewing
-their costs and obtaining approval.
+Codespaces storage is not a permanent data lake.
+Pipeline outputs will require a separately verified
+free storage or artifact strategy for persistence.
+
+## 7. Deployment
+
+The planned dashboard will use Streamlit Community Cloud,
+subject to its current resource and deployment limits.
+
+## 8. Cost Policy
+
+The project targets zero out-of-pocket spending.
+
+No paid AWS resources or paid upgrades will be created.
+Free-tier quotas and platform limits will be monitored.

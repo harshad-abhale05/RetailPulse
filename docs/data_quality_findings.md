@@ -62,3 +62,32 @@ Important:
 - Unmatched geographic coordinates will remain NULL.
 - Investigate formatting and source coverage before classifying
   unmatched prefixes as genuine data errors.
+
+
+## 6. Canceled Orders With Delivery Timestamps
+
+### Finding
+
+During Gold-layer delivery analysis, 6 orders
+were found with:
+
+- order_status = canceled
+- order_delivered_customer_date IS NOT NULL
+
+### Investigation
+
+All six records were inspected individually.
+They contain both purchase and delivery timestamps.
+
+### Decision
+
+- Preserve all six records.
+- Do not modify the original order status.
+- Flag these records as data-quality exceptions.
+- Exclude canceled orders from delivered-order KPIs.
+- Investigate the source-system status history if available.
+
+### Impact
+
+The records demonstrate why business status and
+timestamp validation are both necessary.
