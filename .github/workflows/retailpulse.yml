@@ -74,3 +74,12 @@ jobs:
       - name: Execute RetailPulse pipeline
         run: |
           python src/run_pipeline.py
+
+      - name: Upload pipeline outputs
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: retailpulse-pipeline-outputs
+          path: data/processed/
+          retention-days: 7
+          if-no-files-found: error
