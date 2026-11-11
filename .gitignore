@@ -16,3 +16,7 @@ data/processed/*
 # Editor files
 .vscode/
 .ipynb_checkpoints/
+
+# Downloaded GitHub Actions artifacts
+artifact_outputs/
+*.zip
