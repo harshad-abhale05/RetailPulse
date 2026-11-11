@@ -169,7 +169,7 @@ transform(
 
 # 6. Category translation
 transform(
-    "category_translation",
+    "product_category_name_translation",
     """
     CREATE OR REPLACE TABLE silver_table AS
     SELECT
